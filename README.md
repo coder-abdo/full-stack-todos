@@ -8,7 +8,7 @@ this is the complete todos app with all features such as complete authentication
 
 ### Techs:
 
-#### Back-End
+### Back-End
 
 - Express JS
 - Mongoose
@@ -20,13 +20,21 @@ this is the complete todos app with all features such as complete authentication
 - Typescript
 - DotEnv
 
-#### Front-End
+### Front-End
 
 - React JS
 - Redux-toolkit
 - React-Router-Dom
 - Typescript
 - Axios
+
+### to run the server side:
+
+`npm run dev`
+
+### to make the building code run this command:
+
+`npm run build`
 
 - Rate my Work on Github: [Github-Account](https://github.com/coder-abdo)
 - follow me on LinkedIn for more Code :[LinkedIn](https://www.linkedin.com/in/abdelmonaem-shahat/)
