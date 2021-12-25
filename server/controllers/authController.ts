@@ -44,7 +44,7 @@ export const auth = {
         secure: process.env.ENVIRONMENT === "production",
         sameSite: true,
       });
-      return res.json({ message: "successfully login" });
+      return res.json({ message: "successfully login", isAuthenticated: true });
     } catch (error) {
       next(error);
     }
