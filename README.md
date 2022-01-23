@@ -2,7 +2,7 @@
 
 ## Description:
 
-this is the complete todos app with all features such as complete authentications and authorization from scratch and alos you can add, create, update, and delete todo.
+this is the complete todos app with all features such as complete authentications and authorization from scratch and also, you can add, create, update, and delete todo.
 
 ### Author: Abdelmonaem Shahat
 
@@ -16,17 +16,19 @@ this is the complete todos app with all features such as complete authentication
 - BcryptJS
 - Helmet
 - Cors
-- Cookie-Parser
 - Typescript
 - DotEnv
 
 ### Front-End
 
 - React JS
-- Redux-toolkit
+- Mobx
+- Mobx-React-Lite
 - React-Router-Dom
 - Typescript
-- Axios
+- React-Form-Hook
+- Tailwind CSS
+- Yup
 
 ### to run the server side:
 
