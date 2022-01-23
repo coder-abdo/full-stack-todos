@@ -1,0 +1,22 @@
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: #fff;
+  padding: 1rem;
+}
+
+.nav a {
+  text-decoration: none;
+  font-size: 1.2rem;
+  color: inherit;
+}
+
+.nav a:not(:last-child) {
+  margin-right: 1rem;
+}
+.nav a.active {
+  color: #f12 !important;
+  font-size: 1.3rem;
+}

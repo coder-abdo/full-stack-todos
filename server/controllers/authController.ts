@@ -6,7 +6,6 @@ import HttpException from "../utils/errorException";
 interface IJwtPayload extends jwt.JwtPayload {
   id: string;
 }
-const COOKIEXPIREDTIME = 60 * 60 * 1000; // 1hour
 export const auth = {
   async register(req: Request, res: Response, next: NextFunction) {
     const { username, email, password } = req.body;
@@ -27,7 +26,7 @@ export const auth = {
       next(err);
     }
   },
-  async login(req: Request, res: Response, next: NextFunction) {
+  async login(req: Request | any, res: Response, next: NextFunction) {
     try {
       const user = await User.findOne({ email: req.body.email });
       if (!user) {
@@ -38,34 +37,35 @@ export const auth = {
         return next(new HttpException(400, "Email or Password is incorrect"));
       }
       const token = jwt.sign({ id: user.id }, `${process.env.SECRETTOKEN}`);
-      res.cookie("jwt", token, {
-        maxAge: COOKIEXPIREDTIME,
-        httpOnly: true,
-        secure: process.env.ENVIRONMENT === "production",
-        sameSite: true,
+
+      return res.json({
+        message: "successfully login",
+        token,
+        isAuthenticated: true,
       });
-      return res.json({ message: "successfully login", isAuthenticated: true });
     } catch (error) {
       next(error);
     }
   },
   async authorize(req: Request | any, res: Response, next: NextFunction) {
     try {
-      const token = req.cookies["jwt"];
+      const token = req.headers.authorization.split(" ")[1];
       const payload = jwt.verify(
         token,
         `${process.env.SECRETTOKEN}`
       ) as IJwtPayload;
-      req.id = payload.id;
-      next();
+      if (payload) {
+        req.id = payload.id;
+        return next();
+      }
     } catch (error) {
-      next(error);
+      return next(error);
     }
   },
   async logout(req: Request | any, res: Response, next: NextFunction) {
     try {
-      res.clearCookie("jwt");
-      res.json({ message: "successfully logout" });
+      req.id = null;
+      res.json({ message: "successfully logout", isAuthenticated: false });
     } catch (error) {
       next(error);
     }

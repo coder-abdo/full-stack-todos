@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-
+import { config } from "dotenv";
+config();
 export async function main(): Promise<void> {
-  await mongoose.connect("mongodb://localhost:27017/todos");
+  await mongoose.connect(`${process.env.MONGOURL}`);
 }

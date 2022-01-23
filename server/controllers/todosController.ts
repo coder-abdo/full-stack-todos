@@ -20,10 +20,13 @@ export const todoController = {
       if (!user) {
         return res.sendStatus(401);
       }
-      const { title, text } = req.body;
-      const todo = await Todo.create({ title, text, user });
+      const { title, completed } = req.body;
+      const todo = await Todo.create({ title, user, completed });
       await todo.save();
-      res.json({ todo });
+      return res.json({
+        message: "successfully added todo",
+        status: res.status,
+      });
     } catch (error) {
       next(error);
     }
@@ -34,13 +37,12 @@ export const todoController = {
       if (!user) {
         return res.sendStatus(401);
       }
-      const { completed, title, text } = req.body;
+      const { completed, title } = req.body;
       const todo = await Todo.findByIdAndUpdate(
         req.params.id,
         {
           completed,
           title,
-          text,
         },
         {
           new: true,
@@ -49,7 +51,7 @@ export const todoController = {
       if (!todo) {
         return res.sendStatus(404);
       }
-      return res.json({ todo });
+      return res.json({ message: "successfully update todo" });
     } catch (error) {
       next(error);
     }

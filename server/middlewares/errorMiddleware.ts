@@ -11,5 +11,6 @@ export function errorMiddleWare(
   const message = err.message ?? "something went wrong!!";
   res.status(status).json({
     message,
+    status,
   });
 }
