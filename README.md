@@ -27,7 +27,7 @@ this is the complete todos app with all features such as complete authentication
 - React-Router-Dom
 - Typescript
 - React-Form-Hook
-- Tailwind CSS
+- Styled-Components
 - Yup
 
 ### to run the server side:
