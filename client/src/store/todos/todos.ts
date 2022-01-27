@@ -9,6 +9,8 @@ export class Todos {
   constructor(private rootStore: AppStore) {
     this.getAllTodos = this.getAllTodos.bind(this);
     this.createTodo = this.createTodo.bind(this);
+    this.updateTodo = this.updateTodo.bind(this);
+    this.deleteTodo = this.deleteTodo.bind(this);
     makeAutoObservable(this);
   }
   async getAllTodos() {
@@ -17,6 +19,7 @@ export class Todos {
         authorization: "Bearer " + this.rootStore.auth.token,
       },
     });
+    this.todosState = "pending";
     try {
       const res = await fetchTodos.json();
       runInAction(() => {
@@ -48,12 +51,54 @@ export class Todos {
     try {
       const res = await postTodo.json();
       runInAction(() => {
-        this.todosState = "success";
         this.message = res.message;
       });
     } catch (error) {
       if (error instanceof Error) {
-        this.todosState = "failed";
+        this.message = error.message;
+      }
+    }
+  }
+
+  async updateTodo(id: string, todo: TodoDTO) {
+    const fetchUpdateTodo = await fetch(`${config.serverUrl}/todos/${id}`, {
+      method: "PUT",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + this.rootStore.auth.token,
+      },
+      body: JSON.stringify(todo),
+    });
+    try {
+      const res = await fetchUpdateTodo.json();
+      runInAction(() => {
+        this.getAllTodos();
+        this.message = res.message;
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        this.message = error.message;
+      }
+    }
+  }
+  async deleteTodo(id: string) {
+    const fetchDelteTodo = await fetch(`${config.serverUrl}/todos/${id}`, {
+      method: "DELETE",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + this.rootStore.auth.token,
+      },
+    });
+    try {
+      const res = await fetchDelteTodo.json();
+      runInAction(() => {
+        this.getAllTodos();
+        this.message = res.message;
+      });
+    } catch (error) {
+      if (error instanceof Error) {
         this.message = error.message;
       }
     }

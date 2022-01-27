@@ -6,6 +6,16 @@ import * as yup from "yup";
 import { TodoDTO } from "../interfaces";
 import { useStore } from "../store/store";
 import { Navigate } from "react-router-dom";
+import {
+  CheckBox,
+  Form,
+  Holder,
+  Input,
+  Label,
+  Mark,
+  Message,
+  SubmitInput,
+} from "../components/Input";
 const schema = yup
   .object({
     title: yup.string().required(),
@@ -13,8 +23,9 @@ const schema = yup
   })
   .required();
 export const AddTodo = observer(() => {
+  const [success, setSuccess] = React.useState(false);
   const {
-    todos: { createTodo, todosState },
+    todos: { createTodo },
   } = useStore();
   const {
     register,
@@ -27,24 +38,25 @@ export const AddTodo = observer(() => {
     },
   });
   const addTodo: SubmitHandler<TodoDTO> = (data: TodoDTO) => {
-    console.log(errors);
     createTodo(data);
+    setSuccess(true);
   };
   return (
-    <div>
-      <form noValidate onSubmit={handleSubmit(addTodo)}>
-        <div>
-          <label htmlFor="title">title:</label>
-          <input type="text" {...register("title")} />
-          {errors.title && <span>{errors.title.message}</span>}
-        </div>
-        <div>
-          <label htmlFor="">completed:</label>
-          <input type="checkbox" {...register("completed")} />
-        </div>
-        <input type="submit" value="add todo" />
-      </form>
-      {todosState === "success" && <Navigate to="/todos" replace={true} />}
-    </div>
+    <>
+      <Form noValidate onSubmit={handleSubmit(addTodo)}>
+        <Holder>
+          <Label htmlFor="title">title:</Label>
+          <Input type="text" {...register("title")} />
+          {errors.title && <Message>{errors.title.message}</Message>}
+        </Holder>
+        <Holder>
+          <Label htmlFor="checkbox">completed:</Label>
+          <CheckBox type="checkbox" id="checkbox" {...register("completed")} />
+          <Mark />
+        </Holder>
+        <SubmitInput big type="submit" value="add todo" />
+      </Form>
+      {success && <Navigate to="/todos" replace={true} />}
+    </>
   );
 });

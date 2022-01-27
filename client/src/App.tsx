@@ -1,13 +1,13 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./App.css";
 import { Layout } from "./components/Layout";
 import { Navbar } from "./components/Navbar";
 import { Todos } from "./components/Todos";
 import { AddTodo } from "./pages/AddTodo";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
+import { NotFound } from "./pages/NotFound";
 import { Profile } from "./pages/Profile";
 import ProtectedRoutes from "./pages/ProtectedRoute";
 import { Signup } from "./pages/Signup";
@@ -30,6 +30,7 @@ function App() {
             <Route path="profile" element={<Profile />} />
           </Route>
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );

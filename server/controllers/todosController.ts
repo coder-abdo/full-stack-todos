@@ -8,7 +8,7 @@ export const todoController = {
       if (!user) {
         return res.sendStatus(401);
       }
-      const todos = await Todo.find({ user });
+      const todos = await Todo.find({ user }).sort({ title: 1 });
       return res.json({ todos });
     } catch (error) {
       next(error);
@@ -62,7 +62,7 @@ export const todoController = {
       if (!user) {
         return res.sendStatus(401);
       }
-      const todo = await Todo.findByIdAndDelete(req.params.id);
+      const todo = await Todo.findByIdAndDelete(req.params.id, { new: true });
       if (!todo) {
         return res.sendStatus(404);
       }

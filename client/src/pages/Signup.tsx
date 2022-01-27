@@ -1,59 +1,67 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { Link, Navigate } from "react-router-dom";
 import { useStore } from "../store/store";
+import { userDTO } from "../interfaces";
+import {
+  Form,
+  Holder,
+  Input,
+  Label,
+  Message,
+  SubmitInput,
+} from "../components/Input";
+const schema = yup
+  .object({
+    username: yup.string().required(),
+    email: yup
+      .string()
+      .email()
+      .required(),
+    password: yup.string().required(),
+  })
+  .required();
 export const Signup = observer(() => {
   const {
     auth: { signup, message, state },
   } = useStore();
-  const [signupData, setSignupData] = React.useState({
-    username: "",
-    email: "",
-    password: "",
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<userDTO>({
+    resolver: yupResolver(schema),
   });
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSignupData({ ...signupData, [e.target.name]: e.target.value });
-  };
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    signup(signupData);
+  const handleSignup = (data: userDTO) => {
+    signup(data);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      {state === "failed" && <p>{message}</p>}
+    <Form onSubmit={handleSubmit(handleSignup)}>
+      {state === "failed" && <Message error>{message}</Message>}
       {state === "success" && <Navigate to="/login" replace={true} />}
-      <div>
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          name="username"
-          id="username"
-          value={signupData.username}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="email">Email:</label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          value={signupData.email}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          value={signupData.password}
-          onChange={handleChange}
-        />
-      </div>
-      <button type="submit">signup</button>
-    </form>
+      <Holder>
+        <Label htmlFor="username">Username:</Label>
+        <Input type="text" id="username" {...register("username")} />
+        {errors.username && <Message error>{errors.username.message}</Message>}
+      </Holder>
+      <Holder>
+        <Label htmlFor="email">Email:</Label>
+        <Input type="email" id="email" {...register("email")} />
+        {errors.email && <Message error>{errors.email.message}</Message>}
+      </Holder>
+      <Holder>
+        <Label htmlFor="password">Password:</Label>
+        <Input type="password" id="password" {...register("password")} />
+        {errors.password && <Message error>{errors.password.message}</Message>}
+      </Holder>
+      <SubmitInput big type="submit" value="signup" />
+      <Link to="/login" className="redirect">
+        Already have an account?
+      </Link>
+    </Form>
   );
 });
